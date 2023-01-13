@@ -16,6 +16,7 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: Text('Pokemon List'),
         ),
+        
         body: PokemonList(),
       ),
     );
@@ -28,28 +29,30 @@ class PokemonList extends StatefulWidget {
 }
 
 class _PokemonListState extends State<PokemonList> {
-  Future<List<String>>? _pokemonNames;
+  Future<List<Pokemon>>? _pokemon;
 
   @override
   void initState() {
     super.initState();
-    _pokemonNames = getPokemonNames();
+    _pokemon = getPokemon();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<String>>(
-      future: _pokemonNames,
+    return FutureBuilder<List<Pokemon>>(
+      future: _pokemon,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return ListView.builder(
             itemCount: snapshot.data?.length,
             itemBuilder: (context, index) {
+              final pokemon = snapshot.data![index];
               return ListTile(
-                title: Text(snapshot.data![index]),
+                leading: Image.network(pokemon.imageUrl),
+                title: Text(pokemon.name),
                 onTap: () {
-                  final id = index + 1;
-                  Navigator.of(context).pushNamed('/pokemon', arguments: id);
+                  Navigator.of(context)
+                      .pushNamed('/pokemon', arguments: pokemon);
                 },
               );
             },
@@ -63,22 +66,61 @@ class _PokemonListState extends State<PokemonList> {
   }
 }
 
+class Pokemon {
+  final int id;
+  final String name;
+  final String imageUrl;
+
+  Pokemon({required this.id, required this.name, required this.imageUrl});
+}
+
+Future<List<Pokemon>> getPokemon() async {
+  final response =
+      await http.get(Uri.parse('https://pokeapi.co/api/v2/pokemon?limit=10'));
+  if (response.statusCode != 200) {
+    throw Exception('Error al obtener los Pokemon');
+  }
+  final data = jsonDecode(response.body) as Map<String, dynamic>;
+  final pokemonList = data['results'] as List<dynamic>;
+  final pokemon = <Pokemon>[];
+  for (final pokemonData in pokemonList) {
+    final pokemonResponse = await http.get(Uri.parse(pokemonData['url']));
+    final pokemonJson =
+        jsonDecode(pokemonResponse.body) as Map<String, dynamic>;
+    final imageUrl = pokemonJson['sprites']['front_default'];
+    if (imageUrl == null || imageUrl.isEmpty) {
+    } else {
+      final uri = Uri.tryParse(imageUrl);
+      if (uri == null) {
+      } else {
+        final currentPokemon = Pokemon(
+          id: pokemonJson['id'],
+          name: pokemonJson['name'],
+          imageUrl: imageUrl,
+        );
+        pokemon.add(currentPokemon);
+      }
+    }
+  }
+  return pokemon;
+}
+
 class PokemonDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final id = ModalRoute.of(context)!.settings.arguments as int;
+    final pokemon = ModalRoute.of(context)!.settings.arguments as Pokemon;
     return Scaffold(
       appBar: AppBar(
         title: Text('Pokemon Details'),
       ),
-      body: PokemonDetails(id: id),
+      body: PokemonDetails(pokemon: pokemon),
     );
   }
 }
 
 class PokemonDetails extends StatefulWidget {
-  final int id;
-  PokemonDetails({required this.id});
+  final Pokemon pokemon;
+  PokemonDetails({required this.pokemon});
 
   @override
   _PokemonDetailsState createState() => _PokemonDetailsState();
@@ -90,7 +132,7 @@ class _PokemonDetailsState extends State<PokemonDetails> {
   @override
   void initState() {
     super.initState();
-    _pokemon = getPokemonDetails(widget.id);
+    _pokemon = getPokemonDetails(widget.pokemon.id);
   }
 
   @override
@@ -102,19 +144,20 @@ class _PokemonDetailsState extends State<PokemonDetails> {
           final pokemon = snapshot.data;
           return Column(
             children: <Widget>[
-// You can add an Image widget to display the Pokemon's sprite
-              Image.network(pokemon?['sprites']['front_default']),
-// You can add a Text widget to display the Pokemon's name
-              Text(pokemon?['name']),
-// You can add a Text widget to display the Pokemon's ID
-              Text('ID: ${pokemon?['id']}'),
-// You can add a Text widget to display the Pokemon's weight
-              Text('Weight: ${pokemon?['weight']}'),
-// You can add a Text widget to display the Pokemon's height
-              Text('Height: ${pokemon?['height']}'),
-// You can add a Text widget to display the Pokemon's types
+              // Imagen del pokemón
+              Image.network(widget.pokemon.imageUrl),
+              // Nombre del pokemón
               Text(
-                  'Types: ${pokemon?['types'].map((t) => t['type']['name']).join(', ')}'),
+                  'Nombre: ${widget.pokemon.name.toUpperCase()[0] + widget.pokemon.name.substring(1)}'),
+              // ID del pokémon
+              Text('ID : ${pokemon?['id']}'),
+              // Peso del pokemón
+              Text('Peso : ${pokemon?['weight']}'),
+              //Estatura del pokemón
+              Text('Altura : ${pokemon?['height']}'),
+              //Tipo de pokemón
+              Text(
+                  'Tipos: ${pokemon?['types'].map((t) => t['type']['name']).join(', ')}'),
             ],
           );
         } else if (snapshot.hasError) {
@@ -126,24 +169,11 @@ class _PokemonDetailsState extends State<PokemonDetails> {
   }
 }
 
-Future<List<String>> getPokemonNames() async {
-  final response =
-      await http.get(Uri.parse('https://pokeapi.co/api/v2/pokemon?limit=10'));
-  if (response.statusCode == 200) {
-    final parsed = jsonDecode(response.body);
-    final pokemonList = parsed['results'] as List<dynamic>;
-    return pokemonList.map<String>((p) => p['name'] as String).toList();
-  } else {
-    throw Exception('Error al cargar los pokemones ${response.statusCode}');
-  }
-}
-
 Future<Map<String, dynamic>> getPokemonDetails(int id) async {
   final response =
       await http.get(Uri.parse('https://pokeapi.co/api/v2/pokemon/$id'));
-  if (response.statusCode == 200) {
-    return jsonDecode(response.body);
-  } else {
-    throw Exception('Error al cargar el Pokemon $id');
+  if (response.statusCode != 200) {
+    throw Exception('Error al obtener los detalles del Pokemon');
   }
+  return jsonDecode(response.body) as Map<String, dynamic>;
 }
