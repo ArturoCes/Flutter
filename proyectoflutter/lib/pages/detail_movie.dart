@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/* import 'package:flutter/material.dart';
 import '../models/movie.dart';
 
 class DetailMoviePage extends StatelessWidget {
@@ -27,3 +27,4 @@ class DetailMoviePage extends StatelessWidget {
     );
   }
 }
+*/

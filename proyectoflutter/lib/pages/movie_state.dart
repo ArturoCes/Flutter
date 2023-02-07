@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import '../bloc/movies_bloc.dart';
 import '../models/movie.dart';
@@ -11,7 +13,7 @@ class MovieListPage extends StatefulWidget {
 
 class _MovieListPageState extends State<MovieListPage> {
   final _bloc = MoviesBloc();
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
   int _page = 1;
   bool isLoading = false;
   List<Movie> _movies = [];
@@ -59,27 +61,29 @@ class _MovieListPageState extends State<MovieListPage> {
         },
         child: GridView.builder(
           controller: _scrollController,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
           ),
           itemCount: _movies.length + 1,
           itemBuilder: (context, index) {
             if (index == _movies.length) {
-              return Container(
+              return SizedBox(
                 height: 70.0,
                 child: Center(
-                  child: isLoading ? CircularProgressIndicator() : Container(),
+                  child: isLoading
+                      ? const CircularProgressIndicator()
+                      : Container(),
                 ),
               );
             }
             return Card(
-              
               child: Column(
                 children: [
                   Image.network(
-                      'https://image.tmdb.org/t/p/w500${_movies[index].posterPath}',height: 300, width:300 ,
+                    'https://image.tmdb.org/t/p/w500${_movies[index].posterPath}',
+                    height: 180,
+                    width: 180,
                   ),
-                      
                   Text(_movies[index].title),
                 ],
               ),
