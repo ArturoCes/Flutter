@@ -13,9 +13,7 @@ class Movie extends Equatable {
   final String posterPath;
 
   @override
-  List<Object> get props => [id, title, overview];
-
-  get image => null;
+  List<Object> get props => [id, title, overview, posterPath];
 
   static fromJson(Map<String, dynamic> json) {
     return Movie(

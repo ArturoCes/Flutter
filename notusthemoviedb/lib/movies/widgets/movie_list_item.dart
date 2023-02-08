@@ -9,14 +9,26 @@ class MovieListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    return Material(
-      child: ListTile(
-        leading: Text('${movie.id}', style: textTheme.bodySmall),
-        title: Text(movie.title),
-        isThreeLine: true,
-        subtitle: Text(movie.overview),
-        dense: true,
+    return Card(
+      child: Container(
+        width: 180,
+        height: 180,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              movie.title,
+              style: TextStyle(fontSize: 18),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 10),
+            Image.network(
+              'https://image.tmdb.org/t/p/w500/${movie.posterPath}',
+              width: 230,
+              height: 230,
+            ),
+          ],
+        ),
       ),
     );
   }
