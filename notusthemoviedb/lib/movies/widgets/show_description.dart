@@ -21,7 +21,18 @@ class MovieDescriptionPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text('Movie Description')),
       body: Padding(
-          padding: EdgeInsets.all(16), child: Text('${movie.overview}')),
+          padding: EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Text('${movie.overview}'),
+              Text('${movie.title}'),
+              Image.network(
+                'https://image.tmdb.org/t/p/w500/${movie.posterPath}',
+                width: 180,
+                height: 190,
+              )
+            ],
+          )),
     );
   }
 }
