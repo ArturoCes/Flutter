@@ -11,12 +11,10 @@ const _movieLimit = 20;
 class MovieRepository {
   final httpClient = http.Client();
 
-  Future<List<Movie>> fetchMovies([int startIndex = 0]) async {
-    final response = await httpClient.get(Uri.https(
-      'api.themoviedb.org',
-      '/3/movie/top_rated',
-      {'api_key': 'c3a5a1d07a55c4e1925bb5ddc0941453', 'page': '$startIndex'},
-    ));
+  Future<List<Movie>> fetchMovies([int startIndex = 1]) async {
+    final response = await httpClient.get(Uri.parse(
+        'https://api.themoviedb.org/3/movie/popular?api_key=c3a5a1d07a55c4e1925bb5ddc0941453&page=$startIndex'));
+    print(response);
     if (response.statusCode == 200) {
       final body = json.decode(response.body) as Map<String, dynamic>;
       final List<dynamic> results = body['results'] as List<dynamic>;

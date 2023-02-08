@@ -5,14 +5,15 @@ import '../bloc/movie_bloc.dart';
 import 'movie_list.dart';
 
 class MoviesPage extends StatelessWidget {
-  const MoviesPage({required Key key}) : super(key: key);
+  const MoviesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Movies')),
+      appBar: AppBar(title: const Text('Posts')),
       body: BlocProvider(
-        create: (_) => MovieBloc(),
+        create: (_) =>
+            MovieBloc(/*httpClient: http.Client()*/)..add(MovieFetched()),
         child: const MovieList(key: Key("movie_list")),
       ),
     );

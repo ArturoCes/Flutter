@@ -9,5 +9,5 @@ import 'dependency_injection.dart';
 void main() {
   Bloc.observer = SimpleBlocObserver();
   configureDependencies();
-  runApp(App());
+  runApp(const App());
 }

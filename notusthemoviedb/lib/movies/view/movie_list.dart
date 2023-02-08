@@ -5,7 +5,6 @@ import '../bloc/movie_bloc.dart';
 import '../widgets/bottom_loader.dart';
 import '../widgets/movie_list_item.dart';
 
-
 class MovieList extends StatefulWidget {
   const MovieList({required Key key}) : super(key: key);
 
@@ -33,7 +32,11 @@ class _MovieListState extends State<MovieList> {
             if (state.movies.isEmpty) {
               return const Center(child: Text('no movies'));
             }
-            return ListView.builder(
+            return GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 0.75,
+              ),
               itemBuilder: (BuildContext context, int index) {
                 return index >= state.movies.length
                     ? const BottomLoader()
