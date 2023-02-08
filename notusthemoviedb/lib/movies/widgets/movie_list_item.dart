@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notusthemoviedb/movies/widgets/show_description.dart';
 
 import '../model/movie.dart';
 
@@ -24,8 +25,14 @@ class MovieListItem extends StatelessWidget {
             SizedBox(height: 10),
             Image.network(
               'https://image.tmdb.org/t/p/w500/${movie.posterPath}',
-              width: 230,
-              height: 230,
+              width: 180,
+              height: 180,
+            ),
+            SizedBox(height: 10),
+            TextButton(
+              child: const Text("Show Description"),
+              onPressed: () => showDescription(context, movie),
+          
             ),
           ],
         ),
