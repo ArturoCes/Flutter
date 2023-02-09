@@ -12,30 +12,30 @@ class MovieListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Container(
-        width: 180,
-        height: 180,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              movie.title,
-              style: TextStyle(fontSize: 18),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 10),
-            Image.network(
-              'https://image.tmdb.org/t/p/w500/${movie.posterPath}',
-              width: 180,
-              height: 180,
-            ),
-            SizedBox(height: 10),
-            TextButton(
-              child: const Text("Show Description"),
+        width: 150,
+        height: 150,
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Text(
+            movie.title,
+            style: TextStyle(fontSize: 18),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 10),
+          Image.network(
+            'https://image.tmdb.org/t/p/w500/${movie.posterPath}',
+            width: 150,
+            height: 150,
+          ),
+          SizedBox(height: 10),
+          Expanded(
+            // use expanded widget here
+            flex: 1,
+            child: TextButton(
+              child: const Text("Descripción"),
               onPressed: () => showDescription(context, movie),
-          
             ),
-          ],
-        ),
+          )
+        ]),
       ),
     );
   }

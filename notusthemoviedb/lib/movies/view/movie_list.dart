@@ -9,6 +9,7 @@ class MovieList extends StatefulWidget {
   const MovieList({required Key key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _MovieListState createState() => _MovieListState();
 }
 
@@ -33,7 +34,7 @@ class _MovieListState extends State<MovieList> {
               return const Center(child: Text('no movies'));
             }
             return GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 childAspectRatio: 0.75,
               ),

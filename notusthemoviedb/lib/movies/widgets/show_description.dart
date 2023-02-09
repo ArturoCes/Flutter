@@ -12,6 +12,7 @@ void showDescription(BuildContext context, Movie movie) {
 
 //Crear la clase MovieDescriptionPage:
 class MovieDescriptionPage extends StatelessWidget {
+  // ignore: use_key_in_widget_constructors
   const MovieDescriptionPage({required this.movie});
 
   final Movie movie;
@@ -19,18 +20,18 @@ class MovieDescriptionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Movie Description')),
+      appBar: AppBar(title: const Text('Descripción de la pelicula')),
       body: Padding(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Column(
             children: [
-              Text('${movie.overview}'),
-              Text('${movie.title}'),
               Image.network(
                 'https://image.tmdb.org/t/p/w500/${movie.posterPath}',
                 width: 180,
                 height: 190,
-              )
+              ),
+              Text(movie.title),
+              Text(movie.overview),
             ],
           )),
     );

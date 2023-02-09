@@ -10,7 +10,7 @@ class MoviesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Posts')),
+      appBar: AppBar(title: const Text('Peliculas')),
       body: BlocProvider(
         create: (_) =>
             MovieBloc(/*httpClient: http.Client()*/)..add(MovieFetched()),
